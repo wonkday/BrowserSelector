@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -64,12 +65,24 @@ namespace DanTup.BrowserSelector.Selector
             base.OnLoad(e);
 
             this.ShowMenu();
+
+            // System.Windows.Forms.MessageBox.Show($"OnLoad");
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            base.OnClosing(e);
+
+            // System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
+
+            // System.Windows.Forms.MessageBox.Show($"OnClosing" + Environment.NewLine + t.ToString() );
         }
 
         internal void ShowMenu()
         {
+            //contextMenuStrip1.BringToFront();
             contextMenuStrip1.Show(MousePosition.X, MousePosition.Y);
-            contextMenuStrip1.Focus();
+            // contextMenuStrip1.Focus();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -80,10 +93,10 @@ namespace DanTup.BrowserSelector.Selector
             {
                 Program.OpenUrlInBrowser(_urlToOpen, browser);
             }
-            else
-            {
-                MessageBox.Show(this, ":-((");
-            }
+            // else
+            // {
+            //     MessageBox.Show(this, ":-((");
+            // }
             
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -95,8 +108,8 @@ namespace DanTup.BrowserSelector.Selector
                 contextMenuStrip1.Items[listBox1.SelectedIndex+3].PerformClick();
             }
 
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            // this.DialogResult = DialogResult.OK;
+            // this.Close();
         }
 
         private void contextMenuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -107,10 +120,10 @@ namespace DanTup.BrowserSelector.Selector
             {
                 Program.OpenUrlInBrowser(_urlToOpen, browser);
             }
-            else
-            {
-                MessageBox.Show(this, ":-((");
-            }
+            // else
+            // {
+            //     MessageBox.Show(this, ":-((");
+            // }
 
             this.DialogResult = DialogResult.OK;
             this.Close();
@@ -118,6 +131,8 @@ namespace DanTup.BrowserSelector.Selector
 
         private void contextMenuStrip1_Closed(object sender, ToolStripDropDownClosedEventArgs e)
         {
+            // System.Windows.Forms.MessageBox.Show($"Closed");
+
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
