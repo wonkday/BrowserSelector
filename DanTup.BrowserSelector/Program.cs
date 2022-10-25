@@ -28,7 +28,7 @@ namespace DanTup.BrowserSelector
 
 			if (args == null || args.Length == 0)
 			{
-				ShowHelpInfo();
+				ShowHelpInfo(args);
 				return;
 			}
 
@@ -70,7 +70,11 @@ namespace DanTup.BrowserSelector
 				}
 				else
 				{
-					if (arg.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || arg.StartsWith("https://", StringComparison.OrdinalIgnoreCase) || arg.StartsWith("ftp://", StringComparison.OrdinalIgnoreCase))
+					if (arg.StartsWith("http://", StringComparison.OrdinalIgnoreCase) 
+                        || arg.StartsWith("https://", StringComparison.OrdinalIgnoreCase) 
+                        || arg.StartsWith("ftp://", StringComparison.OrdinalIgnoreCase)
+                        || arg.StartsWith("ftps://", StringComparison.OrdinalIgnoreCase)
+                        || arg.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
 					{
 						LaunchBrowser(arg, waitForClose);
 					}
@@ -84,16 +88,19 @@ namespace DanTup.BrowserSelector
 					}
 					else
 					{
-						ShowHelpInfo();
+						ShowHelpInfo(args);
 						return;
 					}
 				}
 			}
 		}
 
-		static void ShowHelpInfo()
+		static void ShowHelpInfo(string[] args)
 		{
-			MessageBox.Show(@"Usage:
+            var runLine = String.Join(" ", args);
+			MessageBox.Show(@"Args: " + runLine + @"
+
+Usage:
 
     BrowserSelector.exe --register
         Register as web browser
@@ -142,7 +149,6 @@ To open multiple urls at the same time and wait for them, try the following:
 				Environment.Exit(0);
 			}
 		}
-
 
 		static void LaunchUrlFile(string file, bool waitForClose = false)
 		{
@@ -232,20 +238,23 @@ To open multiple urls at the same time and wait for them, try the following:
 
 	    internal static void OpenUrlInBrowser(string url, Browser browser, bool waitForClose = false)
 	    {
-	        try
-	        {
-	            string _url = url;
-	            Uri uri = new Uri(_url);
-	            Process p;
+			try
+			{
+				string _url = url;
+				Uri uri = new Uri(_url);
+				Process p;
 
-                string loc = browser.Location;
-	            
-	            if (loc.IndexOf("{url}") > -1)
-	            {
-	                loc = loc.Replace("{url}", _url);
-	                _url = "";
-	            }
-	            if (loc.StartsWith("\"") && loc.IndexOf('"', 2) > -1)
+				string loc = browser.Location;
+
+				var tpl = Scriban.Template.Parse(loc);
+				loc = tpl.Render(new { url = url });
+
+				if (loc.StartsWith("open "))
+                {
+					loc = loc.Substring(5);
+					p = Process.Start(new ProcessStartInfo { UseShellExecute = true, FileName = loc });
+				}
+				else if (loc.StartsWith("\"") && loc.IndexOf('"', 2) > -1)
 	            {
 	                // Assume the quoted item is the executable, while everything
 	                // after (the second quote), is part of the command-line arguments.
@@ -253,7 +262,7 @@ To open multiple urls at the same time and wait for them, try the following:
 	                int pos = loc.IndexOf('"');
 	                string args = loc.Substring(pos + 1).Trim();
 	                loc = loc.Substring(0, pos).Trim();
-	                p = Process.Start(loc, args + " " + _url);
+	                p = Process.Start(loc, args);
 	            }
 	            else
 	            {
