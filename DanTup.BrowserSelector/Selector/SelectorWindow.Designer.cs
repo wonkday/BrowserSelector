@@ -48,8 +48,6 @@
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(0, 0);
             this.listBox1.TabIndex = 0;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            this.listBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SelectorWindow_KeyUp);
             // 
             // contextMenuStrip1
             // 
@@ -58,11 +56,11 @@
             this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.contextMenuStrip1.Margin = new System.Windows.Forms.Padding(5);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.ShowItemToolTips = false;
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             this.contextMenuStrip1.Text = "Select Browser";
             this.contextMenuStrip1.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(this.contextMenuStrip1_Closed);
             this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.contextMenuStrip1_ItemClicked);
+            this.contextMenuStrip1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.SelectorWindow_KeyUp);            
             // 
             // SelectorWindow
             // 
